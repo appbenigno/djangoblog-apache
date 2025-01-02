@@ -1,0 +1,50 @@
+# Install Apache2 Web Server
+sudo apt install apache2
+
+# Install WSGI
+sudo apt install libapache2-mod-wsgi-py3
+
+# Copy Apache2 Default
+cd /etc/apache2/sites-available
+sudo cp 000-default.conf django_project.conf
+
+# Add lines to the conf to map static folders and etc
+#
+Alias /static /home/appbenigno/full-stack/djangoblog/static
+<Directory /home/appbenigno/full-stack/djangoblog/static>
+    Require all granted
+</Directory>
+
+Alias /media /home/appbenigno/full-stack/djangoblog/media
+<Directory /home/appbenigno/full-stack/djangoblog/media>
+    Require all granted
+</Directory>
+
+# Grant access to wsgi.py file within the project to ensure apache can access it to talk to web server
+#
+<Directory /home/appbenigno/full-stack/djangoblog/djangoblog>
+    <Files wsgi.py>
+        Require all granted
+    </Files>
+</Directory>
+
+WSGIScriptAlias / /home/appbenigno/full-stack/djangoblog/djangoblog/wsgi.py
+WSGIDaemonProcess django_app python-home=/home/appbenigno/full-stack/djangoblog/venv python-path=/home/appbenigno/full-stack/djangoblog
+WSGIProcessGroup django_app
+
+# Enable the site through apache
+sudo a2ensite django_project
+
+# Disable default site
+sudo a2dissite 000-default
+
+# Give apache access to database, media folder read and write access
+sudo chown :www-data djangoblog/db.sqlite3
+sudo chmod 664 djangoblog/db.sqlite3
+sudo chown :www-data djangoblog/
+sudo chmod 775 djangoblog/
+sudo chown -R :www-data djangoblog/media/
+sudo chmod -R 775 djangoblog/media/
+
+sudo chown -R www-data:www-data /home/appbenigno/full-stack/djangoblog
+sudo chmod -R 755 /home/appbenigno/full-stack/djangoblog

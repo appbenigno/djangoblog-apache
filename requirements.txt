@@ -1,0 +1,6 @@
+django
+bcrypt
+django-crispy-forms
+crispy_bootstrap5
+pillow
+django-environ
