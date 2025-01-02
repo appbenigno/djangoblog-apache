@@ -42,6 +42,9 @@ sudo a2dissite 000-default
 sudo nano /etc/apache2/envvars
 -> export APACHE_RUN_USER=johndoe
 
+# Restart Apache2
+sudo systemctl restart apache2
+
  -- OR --
 
 # Give apache access to database, media folder read and write access
